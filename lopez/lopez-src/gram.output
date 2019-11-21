@@ -1,0 +1,2566 @@
+Grammar
+
+    0 $accept: Language $end
+
+    1 Language: RuleList
+
+    2 RuleList: Rule
+    3         | Rule RuleList
+
+    4 Rule: AssignResult Resultado '{' BoolExp '}'
+    5     | AssignResult '{' AssignSet '}' Resultado '{' BoolExp '}'
+
+    6 AssignResult: Resultado
+    7             | '{' PortSendSet '}'
+
+    8 Resultado: Constant
+    9          | UNDEF
+   10          | '{' RealExp '}'
+
+   11 BoolExp: BOOL
+   12        | '(' BoolExp ')'
+   13        | RealRelExp
+   14        | NOT BoolExp
+   15        | BoolExp AND BoolExp
+   16        | BoolExp OR BoolExp
+   17        | BoolExp XOR BoolExp
+   18        | BoolExp IMP BoolExp
+   19        | BoolExp EQV BoolExp
+
+   20 RealRelExp: RealExp OP_REL RealExp
+   21           | COND_REAL_FUNC '(' RealExp ')'
+
+   22 RealExp: IdRef
+   23        | '(' RealExp ')'
+   24        | RealExp OP_ADD_SUB RealExp
+   25        | RealExp OP_MUL_DIV RealExp
+
+   26 IdRef: CellRef OptPortName
+   27      | Constant
+   28      | Function
+   29      | UNDEF
+   30      | PORTREF '(' PORTNAME ')'
+   31      | SEND '(' PORTNAME ',' RealExp ')'
+   32      | CELLPOS '(' RealExp ')'
+   33      | STVAR_NAME
+
+   34 OptPortName: /* empty */
+   35            | PORTNAME
+
+   36 AssignSet: /* empty */
+   37          | Assign AssignSet
+
+   38 Assign: STVAR_NAME OP_ASSIGN RealExp ';'
+
+   39 PortSendSet: /* empty */
+   40            | PortSend PortSendSet
+
+   41 PortSend: SEND '(' PORTNAME ',' RealExp ')' ';'
+   42         | PORTNAME OP_ASSIGN RealExp ';'
+
+   43 Constant: INT
+   44         | REAL
+   45         | CONSTFUNC
+
+   46 Function: COUNT
+   47         | STATECOUNT '(' RealExp OptParamPort ')'
+   48         | UNARY_FUNC '(' RealExp ')'
+   49         | BINARY_FUNC '(' RealExp ',' RealExp ')'
+   50         | WITHOUT_PARAM_FUNC_TIME
+   51         | WITHOUT_PARAM_FUNC_RANDOM
+   52         | UNARY_FUNC_RANDOM '(' RealExp ')'
+   53         | BINARY_FUNC_RANDOM '(' RealExp ',' RealExp ')'
+   54         | COND3_FUNC '(' BoolExp ',' RealExp ',' RealExp ')'
+   55         | COND4_FUNC '(' BoolExp ',' RealExp ',' RealExp ',' RealExp ')'
+
+   56 OptParamPort: /* empty */
+   57             | ',' PORTNAME
+
+   58 CellRef: '(' Tupla
+
+   59 Tupla: INT ',' INT Resto_nTupla
+
+   60 Resto_nTupla: ',' INT Resto_nTupla
+   61             | ')'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 12 21 23 30 31 32 41 47 48 49 52 53 54 55 58
+')' (41) 12 21 23 30 31 32 41 47 48 49 52 53 54 55 61
+',' (44) 31 41 49 53 54 55 57 59 60
+';' (59) 38 41 42
+'{' (123) 4 5 7 10
+'}' (125) 4 5 7 10
+error (256)
+EQV (258) 19
+IMP (259) 18
+XOR (260) 17
+OR (261) 16
+AND (262) 15
+NOT (263) 14
+OP_REL (264) 20
+OP_ASSIGN (265) 38 42
+OP_ADD_SUB (266) 24
+OP_MUL_DIV (267) 25
+REAL (268) 44
+INT (269) 43 59 60
+BOOL (270) 11
+COUNT (271) 46
+UNDEF (272) 9 29
+CONSTFUNC (273) 45
+WITHOUT_PARAM_FUNC_TIME (274) 50
+STVAR_NAME (275) 33 38
+WITHOUT_PARAM_FUNC_RANDOM (276) 51
+PORTREF (277) 30
+SEND (278) 31 41
+CELLPOS (279) 32
+BINARY_FUNC (280) 49
+BINARY_FUNC_RANDOM (281) 53
+COND3_FUNC (282) 54
+COND4_FUNC (283) 55
+STATECOUNT (284) 47
+UNARY_FUNC (285) 48
+COND_REAL_FUNC (286) 21
+UNARY_FUNC_RANDOM (287) 52
+PORTNAME (288) 30 31 35 41 42 57
+
+
+Nonterminals, with rules where they appear
+
+$accept (40)
+    on left: 0
+Language (41)
+    on left: 1, on right: 0
+RuleList (42)
+    on left: 2 3, on right: 1 3
+Rule (43)
+    on left: 4 5, on right: 2 3
+AssignResult (44)
+    on left: 6 7, on right: 4 5
+Resultado (45)
+    on left: 8 9 10, on right: 4 5 6
+BoolExp (46)
+    on left: 11 12 13 14 15 16 17 18 19, on right: 4 5 12 14 15 16
+    17 18 19 54 55
+RealRelExp (47)
+    on left: 20 21, on right: 13
+RealExp (48)
+    on left: 22 23 24 25, on right: 10 20 21 23 24 25 31 32 38 41 42
+    47 48 49 52 53 54 55
+IdRef (49)
+    on left: 26 27 28 29 30 31 32 33, on right: 22
+OptPortName (50)
+    on left: 34 35, on right: 26
+AssignSet (51)
+    on left: 36 37, on right: 5 37
+Assign (52)
+    on left: 38, on right: 37
+PortSendSet (53)
+    on left: 39 40, on right: 7 40
+PortSend (54)
+    on left: 41 42, on right: 40
+Constant (55)
+    on left: 43 44 45, on right: 8 27
+Function (56)
+    on left: 46 47 48 49 50 51 52 53 54 55, on right: 28
+OptParamPort (57)
+    on left: 56 57, on right: 47
+CellRef (58)
+    on left: 58, on right: 26
+Tupla (59)
+    on left: 59, on right: 58
+Resto_nTupla (60)
+    on left: 60 61, on right: 59 60
+
+
+state 0
+
+    0 $accept: . Language $end
+
+    REAL       shift, and go to state 1
+    INT        shift, and go to state 2
+    UNDEF      shift, and go to state 3
+    CONSTFUNC  shift, and go to state 4
+    '{'        shift, and go to state 5
+
+    Language      go to state 6
+    RuleList      go to state 7
+    Rule          go to state 8
+    AssignResult  go to state 9
+    Resultado     go to state 10
+    Constant      go to state 11
+
+
+state 1
+
+   44 Constant: REAL .
+
+    $default  reduce using rule 44 (Constant)
+
+
+state 2
+
+   43 Constant: INT .
+
+    $default  reduce using rule 43 (Constant)
+
+
+state 3
+
+    9 Resultado: UNDEF .
+
+    $default  reduce using rule 9 (Resultado)
+
+
+state 4
+
+   45 Constant: CONSTFUNC .
+
+    $default  reduce using rule 45 (Constant)
+
+
+state 5
+
+    7 AssignResult: '{' . PortSendSet '}'
+   10 Resultado: '{' . RealExp '}'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 18
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    PORTNAME                   shift, and go to state 27
+    '('                        shift, and go to state 28
+
+    $default  reduce using rule 39 (PortSendSet)
+
+    RealExp      go to state 29
+    IdRef        go to state 30
+    PortSendSet  go to state 31
+    PortSend     go to state 32
+    Constant     go to state 33
+    Function     go to state 34
+    CellRef      go to state 35
+
+
+state 6
+
+    0 $accept: Language . $end
+
+    $end  shift, and go to state 36
+
+
+state 7
+
+    1 Language: RuleList .
+
+    $default  reduce using rule 1 (Language)
+
+
+state 8
+
+    2 RuleList: Rule .
+    3         | Rule . RuleList
+
+    REAL       shift, and go to state 1
+    INT        shift, and go to state 2
+    UNDEF      shift, and go to state 3
+    CONSTFUNC  shift, and go to state 4
+    '{'        shift, and go to state 5
+
+    $default  reduce using rule 2 (RuleList)
+
+    RuleList      go to state 37
+    Rule          go to state 8
+    AssignResult  go to state 9
+    Resultado     go to state 10
+    Constant      go to state 11
+
+
+state 9
+
+    4 Rule: AssignResult . Resultado '{' BoolExp '}'
+    5     | AssignResult . '{' AssignSet '}' Resultado '{' BoolExp '}'
+
+    REAL       shift, and go to state 1
+    INT        shift, and go to state 2
+    UNDEF      shift, and go to state 3
+    CONSTFUNC  shift, and go to state 4
+    '{'        shift, and go to state 38
+
+    Resultado  go to state 39
+    Constant   go to state 11
+
+
+state 10
+
+    6 AssignResult: Resultado .
+
+    $default  reduce using rule 6 (AssignResult)
+
+
+state 11
+
+    8 Resultado: Constant .
+
+    $default  reduce using rule 8 (Resultado)
+
+
+state 12
+
+   46 Function: COUNT .
+
+    $default  reduce using rule 46 (Function)
+
+
+state 13
+
+   29 IdRef: UNDEF .
+
+    $default  reduce using rule 29 (IdRef)
+
+
+state 14
+
+   50 Function: WITHOUT_PARAM_FUNC_TIME .
+
+    $default  reduce using rule 50 (Function)
+
+
+state 15
+
+   33 IdRef: STVAR_NAME .
+
+    $default  reduce using rule 33 (IdRef)
+
+
+state 16
+
+   51 Function: WITHOUT_PARAM_FUNC_RANDOM .
+
+    $default  reduce using rule 51 (Function)
+
+
+state 17
+
+   30 IdRef: PORTREF . '(' PORTNAME ')'
+
+    '('  shift, and go to state 40
+
+
+state 18
+
+   31 IdRef: SEND . '(' PORTNAME ',' RealExp ')'
+   41 PortSend: SEND . '(' PORTNAME ',' RealExp ')' ';'
+
+    '('  shift, and go to state 41
+
+
+state 19
+
+   32 IdRef: CELLPOS . '(' RealExp ')'
+
+    '('  shift, and go to state 42
+
+
+state 20
+
+   49 Function: BINARY_FUNC . '(' RealExp ',' RealExp ')'
+
+    '('  shift, and go to state 43
+
+
+state 21
+
+   53 Function: BINARY_FUNC_RANDOM . '(' RealExp ',' RealExp ')'
+
+    '('  shift, and go to state 44
+
+
+state 22
+
+   54 Function: COND3_FUNC . '(' BoolExp ',' RealExp ',' RealExp ')'
+
+    '('  shift, and go to state 45
+
+
+state 23
+
+   55 Function: COND4_FUNC . '(' BoolExp ',' RealExp ',' RealExp ',' RealExp ')'
+
+    '('  shift, and go to state 46
+
+
+state 24
+
+   47 Function: STATECOUNT . '(' RealExp OptParamPort ')'
+
+    '('  shift, and go to state 47
+
+
+state 25
+
+   48 Function: UNARY_FUNC . '(' RealExp ')'
+
+    '('  shift, and go to state 48
+
+
+state 26
+
+   52 Function: UNARY_FUNC_RANDOM . '(' RealExp ')'
+
+    '('  shift, and go to state 49
+
+
+state 27
+
+   42 PortSend: PORTNAME . OP_ASSIGN RealExp ';'
+
+    OP_ASSIGN  shift, and go to state 50
+
+
+state 28
+
+   23 RealExp: '(' . RealExp ')'
+   58 CellRef: '(' . Tupla
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 51
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 53
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+    Tupla     go to state 54
+
+
+state 29
+
+   10 Resultado: '{' RealExp . '}'
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    '}'         shift, and go to state 57
+
+
+state 30
+
+   22 RealExp: IdRef .
+
+    $default  reduce using rule 22 (RealExp)
+
+
+state 31
+
+    7 AssignResult: '{' PortSendSet . '}'
+
+    '}'  shift, and go to state 58
+
+
+state 32
+
+   40 PortSendSet: PortSend . PortSendSet
+
+    SEND      shift, and go to state 59
+    PORTNAME  shift, and go to state 27
+
+    $default  reduce using rule 39 (PortSendSet)
+
+    PortSendSet  go to state 60
+    PortSend     go to state 32
+
+
+state 33
+
+   27 IdRef: Constant .
+
+    $default  reduce using rule 27 (IdRef)
+
+
+state 34
+
+   28 IdRef: Function .
+
+    $default  reduce using rule 28 (IdRef)
+
+
+state 35
+
+   26 IdRef: CellRef . OptPortName
+
+    PORTNAME  shift, and go to state 61
+
+    $default  reduce using rule 34 (OptPortName)
+
+    OptPortName  go to state 62
+
+
+state 36
+
+    0 $accept: Language $end .
+
+    $default  accept
+
+
+state 37
+
+    3 RuleList: Rule RuleList .
+
+    $default  reduce using rule 3 (RuleList)
+
+
+state 38
+
+    5 Rule: AssignResult '{' . AssignSet '}' Resultado '{' BoolExp '}'
+   10 Resultado: '{' . RealExp '}'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 63
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    $default  reduce using rule 36 (AssignSet)
+
+    RealExp    go to state 29
+    IdRef      go to state 30
+    AssignSet  go to state 64
+    Assign     go to state 65
+    Constant   go to state 33
+    Function   go to state 34
+    CellRef    go to state 35
+
+
+state 39
+
+    4 Rule: AssignResult Resultado . '{' BoolExp '}'
+
+    '{'  shift, and go to state 66
+
+
+state 40
+
+   30 IdRef: PORTREF '(' . PORTNAME ')'
+
+    PORTNAME  shift, and go to state 67
+
+
+state 41
+
+   31 IdRef: SEND '(' . PORTNAME ',' RealExp ')'
+   41 PortSend: SEND '(' . PORTNAME ',' RealExp ')' ';'
+
+    PORTNAME  shift, and go to state 68
+
+
+state 42
+
+   32 IdRef: CELLPOS '(' . RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 69
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 43
+
+   49 Function: BINARY_FUNC '(' . RealExp ',' RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 70
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 44
+
+   53 Function: BINARY_FUNC_RANDOM '(' . RealExp ',' RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 71
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 45
+
+   54 Function: COND3_FUNC '(' . BoolExp ',' RealExp ',' RealExp ')'
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 76
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 46
+
+   55 Function: COND4_FUNC '(' . BoolExp ',' RealExp ',' RealExp ',' RealExp ')'
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 79
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 47
+
+   47 Function: STATECOUNT '(' . RealExp OptParamPort ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 80
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 48
+
+   48 Function: UNARY_FUNC '(' . RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 81
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 49
+
+   52 Function: UNARY_FUNC_RANDOM '(' . RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 82
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 50
+
+   42 PortSend: PORTNAME OP_ASSIGN . RealExp ';'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 83
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 51
+
+   43 Constant: INT .
+   59 Tupla: INT . ',' INT Resto_nTupla
+
+    ','  shift, and go to state 84
+
+    $default  reduce using rule 43 (Constant)
+
+
+state 52
+
+   31 IdRef: SEND . '(' PORTNAME ',' RealExp ')'
+
+    '('  shift, and go to state 85
+
+
+state 53
+
+   23 RealExp: '(' RealExp . ')'
+   24        | RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 86
+
+
+state 54
+
+   58 CellRef: '(' Tupla .
+
+    $default  reduce using rule 58 (CellRef)
+
+
+state 55
+
+   24 RealExp: RealExp OP_ADD_SUB . RealExp
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 87
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 56
+
+   25 RealExp: RealExp OP_MUL_DIV . RealExp
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 88
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 57
+
+   10 Resultado: '{' RealExp '}' .
+
+    $default  reduce using rule 10 (Resultado)
+
+
+state 58
+
+    7 AssignResult: '{' PortSendSet '}' .
+
+    $default  reduce using rule 7 (AssignResult)
+
+
+state 59
+
+   41 PortSend: SEND . '(' PORTNAME ',' RealExp ')' ';'
+
+    '('  shift, and go to state 89
+
+
+state 60
+
+   40 PortSendSet: PortSend PortSendSet .
+
+    $default  reduce using rule 40 (PortSendSet)
+
+
+state 61
+
+   35 OptPortName: PORTNAME .
+
+    $default  reduce using rule 35 (OptPortName)
+
+
+state 62
+
+   26 IdRef: CellRef OptPortName .
+
+    $default  reduce using rule 26 (IdRef)
+
+
+state 63
+
+   33 IdRef: STVAR_NAME .
+   38 Assign: STVAR_NAME . OP_ASSIGN RealExp ';'
+
+    OP_ASSIGN  shift, and go to state 90
+
+    $default  reduce using rule 33 (IdRef)
+
+
+state 64
+
+    5 Rule: AssignResult '{' AssignSet . '}' Resultado '{' BoolExp '}'
+
+    '}'  shift, and go to state 91
+
+
+state 65
+
+   37 AssignSet: Assign . AssignSet
+
+    STVAR_NAME  shift, and go to state 92
+
+    $default  reduce using rule 36 (AssignSet)
+
+    AssignSet  go to state 93
+    Assign     go to state 65
+
+
+state 66
+
+    4 Rule: AssignResult Resultado '{' . BoolExp '}'
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 94
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 67
+
+   30 IdRef: PORTREF '(' PORTNAME . ')'
+
+    ')'  shift, and go to state 95
+
+
+state 68
+
+   31 IdRef: SEND '(' PORTNAME . ',' RealExp ')'
+   41 PortSend: SEND '(' PORTNAME . ',' RealExp ')' ';'
+
+    ','  shift, and go to state 96
+
+
+state 69
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   32 IdRef: CELLPOS '(' RealExp . ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 97
+
+
+state 70
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   49 Function: BINARY_FUNC '(' RealExp . ',' RealExp ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ','         shift, and go to state 98
+
+
+state 71
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   53 Function: BINARY_FUNC_RANDOM '(' RealExp . ',' RealExp ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ','         shift, and go to state 99
+
+
+state 72
+
+   14 BoolExp: NOT . BoolExp
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 100
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 73
+
+   11 BoolExp: BOOL .
+
+    $default  reduce using rule 11 (BoolExp)
+
+
+state 74
+
+   21 RealRelExp: COND_REAL_FUNC . '(' RealExp ')'
+
+    '('  shift, and go to state 101
+
+
+state 75
+
+   12 BoolExp: '(' . BoolExp ')'
+   23 RealExp: '(' . RealExp ')'
+   58 CellRef: '(' . Tupla
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 51
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 102
+    RealRelExp  go to state 77
+    RealExp     go to state 103
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+    Tupla       go to state 54
+
+
+state 76
+
+   15 BoolExp: BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+   54 Function: COND3_FUNC '(' BoolExp . ',' RealExp ',' RealExp ')'
+
+    EQV  shift, and go to state 104
+    IMP  shift, and go to state 105
+    XOR  shift, and go to state 106
+    OR   shift, and go to state 107
+    AND  shift, and go to state 108
+    ','  shift, and go to state 109
+
+
+state 77
+
+   13 BoolExp: RealRelExp .
+
+    $default  reduce using rule 13 (BoolExp)
+
+
+state 78
+
+   20 RealRelExp: RealExp . OP_REL RealExp
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+
+    OP_REL      shift, and go to state 110
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+
+
+state 79
+
+   15 BoolExp: BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+   55 Function: COND4_FUNC '(' BoolExp . ',' RealExp ',' RealExp ',' RealExp ')'
+
+    EQV  shift, and go to state 104
+    IMP  shift, and go to state 105
+    XOR  shift, and go to state 106
+    OR   shift, and go to state 107
+    AND  shift, and go to state 108
+    ','  shift, and go to state 111
+
+
+state 80
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   47 Function: STATECOUNT '(' RealExp . OptParamPort ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ','         shift, and go to state 112
+
+    $default  reduce using rule 56 (OptParamPort)
+
+    OptParamPort  go to state 113
+
+
+state 81
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   48 Function: UNARY_FUNC '(' RealExp . ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 114
+
+
+state 82
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   52 Function: UNARY_FUNC_RANDOM '(' RealExp . ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 115
+
+
+state 83
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   42 PortSend: PORTNAME OP_ASSIGN RealExp . ';'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ';'         shift, and go to state 116
+
+
+state 84
+
+   59 Tupla: INT ',' . INT Resto_nTupla
+
+    INT  shift, and go to state 117
+
+
+state 85
+
+   31 IdRef: SEND '(' . PORTNAME ',' RealExp ')'
+
+    PORTNAME  shift, and go to state 118
+
+
+state 86
+
+   23 RealExp: '(' RealExp ')' .
+
+    $default  reduce using rule 23 (RealExp)
+
+
+state 87
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   24        | RealExp OP_ADD_SUB RealExp .
+   25        | RealExp . OP_MUL_DIV RealExp
+
+    OP_MUL_DIV  shift, and go to state 56
+
+    $default  reduce using rule 24 (RealExp)
+
+
+state 88
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   25        | RealExp OP_MUL_DIV RealExp .
+
+    $default  reduce using rule 25 (RealExp)
+
+
+state 89
+
+   41 PortSend: SEND '(' . PORTNAME ',' RealExp ')' ';'
+
+    PORTNAME  shift, and go to state 119
+
+
+state 90
+
+   38 Assign: STVAR_NAME OP_ASSIGN . RealExp ';'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 120
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 91
+
+    5 Rule: AssignResult '{' AssignSet '}' . Resultado '{' BoolExp '}'
+
+    REAL       shift, and go to state 1
+    INT        shift, and go to state 2
+    UNDEF      shift, and go to state 3
+    CONSTFUNC  shift, and go to state 4
+    '{'        shift, and go to state 121
+
+    Resultado  go to state 122
+    Constant   go to state 11
+
+
+state 92
+
+   38 Assign: STVAR_NAME . OP_ASSIGN RealExp ';'
+
+    OP_ASSIGN  shift, and go to state 90
+
+
+state 93
+
+   37 AssignSet: Assign AssignSet .
+
+    $default  reduce using rule 37 (AssignSet)
+
+
+state 94
+
+    4 Rule: AssignResult Resultado '{' BoolExp . '}'
+   15 BoolExp: BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+
+    EQV  shift, and go to state 104
+    IMP  shift, and go to state 105
+    XOR  shift, and go to state 106
+    OR   shift, and go to state 107
+    AND  shift, and go to state 108
+    '}'  shift, and go to state 123
+
+
+state 95
+
+   30 IdRef: PORTREF '(' PORTNAME ')' .
+
+    $default  reduce using rule 30 (IdRef)
+
+
+state 96
+
+   31 IdRef: SEND '(' PORTNAME ',' . RealExp ')'
+   41 PortSend: SEND '(' PORTNAME ',' . RealExp ')' ';'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 124
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 97
+
+   32 IdRef: CELLPOS '(' RealExp ')' .
+
+    $default  reduce using rule 32 (IdRef)
+
+
+state 98
+
+   49 Function: BINARY_FUNC '(' RealExp ',' . RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 125
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 99
+
+   53 Function: BINARY_FUNC_RANDOM '(' RealExp ',' . RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 126
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 100
+
+   14 BoolExp: NOT BoolExp .
+   15        | BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+
+    $default  reduce using rule 14 (BoolExp)
+
+
+state 101
+
+   21 RealRelExp: COND_REAL_FUNC '(' . RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 127
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 102
+
+   12 BoolExp: '(' BoolExp . ')'
+   15        | BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+
+    EQV  shift, and go to state 104
+    IMP  shift, and go to state 105
+    XOR  shift, and go to state 106
+    OR   shift, and go to state 107
+    AND  shift, and go to state 108
+    ')'  shift, and go to state 128
+
+
+state 103
+
+   20 RealRelExp: RealExp . OP_REL RealExp
+   23 RealExp: '(' RealExp . ')'
+   24        | RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+
+    OP_REL      shift, and go to state 110
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 86
+
+
+state 104
+
+   19 BoolExp: BoolExp EQV . BoolExp
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 129
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 105
+
+   18 BoolExp: BoolExp IMP . BoolExp
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 130
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 106
+
+   17 BoolExp: BoolExp XOR . BoolExp
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 131
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 107
+
+   16 BoolExp: BoolExp OR . BoolExp
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 132
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 108
+
+   15 BoolExp: BoolExp AND . BoolExp
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 133
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 109
+
+   54 Function: COND3_FUNC '(' BoolExp ',' . RealExp ',' RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 134
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 110
+
+   20 RealRelExp: RealExp OP_REL . RealExp
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 135
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 111
+
+   55 Function: COND4_FUNC '(' BoolExp ',' . RealExp ',' RealExp ',' RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 136
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 112
+
+   57 OptParamPort: ',' . PORTNAME
+
+    PORTNAME  shift, and go to state 137
+
+
+state 113
+
+   47 Function: STATECOUNT '(' RealExp OptParamPort . ')'
+
+    ')'  shift, and go to state 138
+
+
+state 114
+
+   48 Function: UNARY_FUNC '(' RealExp ')' .
+
+    $default  reduce using rule 48 (Function)
+
+
+state 115
+
+   52 Function: UNARY_FUNC_RANDOM '(' RealExp ')' .
+
+    $default  reduce using rule 52 (Function)
+
+
+state 116
+
+   42 PortSend: PORTNAME OP_ASSIGN RealExp ';' .
+
+    $default  reduce using rule 42 (PortSend)
+
+
+state 117
+
+   59 Tupla: INT ',' INT . Resto_nTupla
+
+    ')'  shift, and go to state 139
+    ','  shift, and go to state 140
+
+    Resto_nTupla  go to state 141
+
+
+state 118
+
+   31 IdRef: SEND '(' PORTNAME . ',' RealExp ')'
+
+    ','  shift, and go to state 142
+
+
+state 119
+
+   41 PortSend: SEND '(' PORTNAME . ',' RealExp ')' ';'
+
+    ','  shift, and go to state 143
+
+
+state 120
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   38 Assign: STVAR_NAME OP_ASSIGN RealExp . ';'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ';'         shift, and go to state 144
+
+
+state 121
+
+   10 Resultado: '{' . RealExp '}'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 29
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 122
+
+    5 Rule: AssignResult '{' AssignSet '}' Resultado . '{' BoolExp '}'
+
+    '{'  shift, and go to state 145
+
+
+state 123
+
+    4 Rule: AssignResult Resultado '{' BoolExp '}' .
+
+    $default  reduce using rule 4 (Rule)
+
+
+state 124
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   31 IdRef: SEND '(' PORTNAME ',' RealExp . ')'
+   41 PortSend: SEND '(' PORTNAME ',' RealExp . ')' ';'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 146
+
+
+state 125
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   49 Function: BINARY_FUNC '(' RealExp ',' RealExp . ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 147
+
+
+state 126
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   53 Function: BINARY_FUNC_RANDOM '(' RealExp ',' RealExp . ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 148
+
+
+state 127
+
+   21 RealRelExp: COND_REAL_FUNC '(' RealExp . ')'
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 149
+
+
+state 128
+
+   12 BoolExp: '(' BoolExp ')' .
+
+    $default  reduce using rule 12 (BoolExp)
+
+
+state 129
+
+   15 BoolExp: BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+   19        | BoolExp EQV BoolExp .
+
+    $default  reduce using rule 19 (BoolExp)
+
+
+state 130
+
+   15 BoolExp: BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   18        | BoolExp IMP BoolExp .
+   19        | BoolExp . EQV BoolExp
+
+    $default  reduce using rule 18 (BoolExp)
+
+
+state 131
+
+   15 BoolExp: BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   17        | BoolExp XOR BoolExp .
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+
+    $default  reduce using rule 17 (BoolExp)
+
+
+state 132
+
+   15 BoolExp: BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   16        | BoolExp OR BoolExp .
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+
+    $default  reduce using rule 16 (BoolExp)
+
+
+state 133
+
+   15 BoolExp: BoolExp . AND BoolExp
+   15        | BoolExp AND BoolExp .
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+
+    $default  reduce using rule 15 (BoolExp)
+
+
+state 134
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   54 Function: COND3_FUNC '(' BoolExp ',' RealExp . ',' RealExp ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ','         shift, and go to state 150
+
+
+state 135
+
+   20 RealRelExp: RealExp OP_REL RealExp .
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+
+    $default  reduce using rule 20 (RealRelExp)
+
+
+state 136
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   55 Function: COND4_FUNC '(' BoolExp ',' RealExp . ',' RealExp ',' RealExp ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ','         shift, and go to state 151
+
+
+state 137
+
+   57 OptParamPort: ',' PORTNAME .
+
+    $default  reduce using rule 57 (OptParamPort)
+
+
+state 138
+
+   47 Function: STATECOUNT '(' RealExp OptParamPort ')' .
+
+    $default  reduce using rule 47 (Function)
+
+
+state 139
+
+   61 Resto_nTupla: ')' .
+
+    $default  reduce using rule 61 (Resto_nTupla)
+
+
+state 140
+
+   60 Resto_nTupla: ',' . INT Resto_nTupla
+
+    INT  shift, and go to state 152
+
+
+state 141
+
+   59 Tupla: INT ',' INT Resto_nTupla .
+
+    $default  reduce using rule 59 (Tupla)
+
+
+state 142
+
+   31 IdRef: SEND '(' PORTNAME ',' . RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 153
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 143
+
+   41 PortSend: SEND '(' PORTNAME ',' . RealExp ')' ';'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 154
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 144
+
+   38 Assign: STVAR_NAME OP_ASSIGN RealExp ';' .
+
+    $default  reduce using rule 38 (Assign)
+
+
+state 145
+
+    5 Rule: AssignResult '{' AssignSet '}' Resultado '{' . BoolExp '}'
+
+    NOT                        shift, and go to state 72
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    BOOL                       shift, and go to state 73
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    COND_REAL_FUNC             shift, and go to state 74
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 75
+
+    BoolExp     go to state 155
+    RealRelExp  go to state 77
+    RealExp     go to state 78
+    IdRef       go to state 30
+    Constant    go to state 33
+    Function    go to state 34
+    CellRef     go to state 35
+
+
+state 146
+
+   31 IdRef: SEND '(' PORTNAME ',' RealExp ')' .
+   41 PortSend: SEND '(' PORTNAME ',' RealExp ')' . ';'
+
+    ';'  shift, and go to state 156
+
+    $default  reduce using rule 31 (IdRef)
+
+
+state 147
+
+   49 Function: BINARY_FUNC '(' RealExp ',' RealExp ')' .
+
+    $default  reduce using rule 49 (Function)
+
+
+state 148
+
+   53 Function: BINARY_FUNC_RANDOM '(' RealExp ',' RealExp ')' .
+
+    $default  reduce using rule 53 (Function)
+
+
+state 149
+
+   21 RealRelExp: COND_REAL_FUNC '(' RealExp ')' .
+
+    $default  reduce using rule 21 (RealRelExp)
+
+
+state 150
+
+   54 Function: COND3_FUNC '(' BoolExp ',' RealExp ',' . RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 157
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 151
+
+   55 Function: COND4_FUNC '(' BoolExp ',' RealExp ',' . RealExp ',' RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 158
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 152
+
+   60 Resto_nTupla: ',' INT . Resto_nTupla
+
+    ')'  shift, and go to state 139
+    ','  shift, and go to state 140
+
+    Resto_nTupla  go to state 159
+
+
+state 153
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   31 IdRef: SEND '(' PORTNAME ',' RealExp . ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 160
+
+
+state 154
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   41 PortSend: SEND '(' PORTNAME ',' RealExp . ')' ';'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 161
+
+
+state 155
+
+    5 Rule: AssignResult '{' AssignSet '}' Resultado '{' BoolExp . '}'
+   15 BoolExp: BoolExp . AND BoolExp
+   16        | BoolExp . OR BoolExp
+   17        | BoolExp . XOR BoolExp
+   18        | BoolExp . IMP BoolExp
+   19        | BoolExp . EQV BoolExp
+
+    EQV  shift, and go to state 104
+    IMP  shift, and go to state 105
+    XOR  shift, and go to state 106
+    OR   shift, and go to state 107
+    AND  shift, and go to state 108
+    '}'  shift, and go to state 162
+
+
+state 156
+
+   41 PortSend: SEND '(' PORTNAME ',' RealExp ')' ';' .
+
+    $default  reduce using rule 41 (PortSend)
+
+
+state 157
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   54 Function: COND3_FUNC '(' BoolExp ',' RealExp ',' RealExp . ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 163
+
+
+state 158
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   55 Function: COND4_FUNC '(' BoolExp ',' RealExp ',' RealExp . ',' RealExp ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ','         shift, and go to state 164
+
+
+state 159
+
+   60 Resto_nTupla: ',' INT Resto_nTupla .
+
+    $default  reduce using rule 60 (Resto_nTupla)
+
+
+state 160
+
+   31 IdRef: SEND '(' PORTNAME ',' RealExp ')' .
+
+    $default  reduce using rule 31 (IdRef)
+
+
+state 161
+
+   41 PortSend: SEND '(' PORTNAME ',' RealExp ')' . ';'
+
+    ';'  shift, and go to state 156
+
+
+state 162
+
+    5 Rule: AssignResult '{' AssignSet '}' Resultado '{' BoolExp '}' .
+
+    $default  reduce using rule 5 (Rule)
+
+
+state 163
+
+   54 Function: COND3_FUNC '(' BoolExp ',' RealExp ',' RealExp ')' .
+
+    $default  reduce using rule 54 (Function)
+
+
+state 164
+
+   55 Function: COND4_FUNC '(' BoolExp ',' RealExp ',' RealExp ',' . RealExp ')'
+
+    REAL                       shift, and go to state 1
+    INT                        shift, and go to state 2
+    COUNT                      shift, and go to state 12
+    UNDEF                      shift, and go to state 13
+    CONSTFUNC                  shift, and go to state 4
+    WITHOUT_PARAM_FUNC_TIME    shift, and go to state 14
+    STVAR_NAME                 shift, and go to state 15
+    WITHOUT_PARAM_FUNC_RANDOM  shift, and go to state 16
+    PORTREF                    shift, and go to state 17
+    SEND                       shift, and go to state 52
+    CELLPOS                    shift, and go to state 19
+    BINARY_FUNC                shift, and go to state 20
+    BINARY_FUNC_RANDOM         shift, and go to state 21
+    COND3_FUNC                 shift, and go to state 22
+    COND4_FUNC                 shift, and go to state 23
+    STATECOUNT                 shift, and go to state 24
+    UNARY_FUNC                 shift, and go to state 25
+    UNARY_FUNC_RANDOM          shift, and go to state 26
+    '('                        shift, and go to state 28
+
+    RealExp   go to state 165
+    IdRef     go to state 30
+    Constant  go to state 33
+    Function  go to state 34
+    CellRef   go to state 35
+
+
+state 165
+
+   24 RealExp: RealExp . OP_ADD_SUB RealExp
+   25        | RealExp . OP_MUL_DIV RealExp
+   55 Function: COND4_FUNC '(' BoolExp ',' RealExp ',' RealExp ',' RealExp . ')'
+
+    OP_ADD_SUB  shift, and go to state 55
+    OP_MUL_DIV  shift, and go to state 56
+    ')'         shift, and go to state 166
+
+
+state 166
+
+   55 Function: COND4_FUNC '(' BoolExp ',' RealExp ',' RealExp ',' RealExp ')' .
+
+    $default  reduce using rule 55 (Function)

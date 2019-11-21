@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ConfigFramework>
+   <Doc> This model simulates Queue using DEVS. It uses Lopez linux version. For Detailed XML configuration please see User Manual.  </Doc>
+      <Files>
+         <File ftype="ev">queue.ev</File>
+	 <File ftype="ma">queue.ma</File>
+
+         <File ftype="src">queue.cpp</File>
+         <File ftype="hdr" class="Queue">queue.h</File>
+      </Files>
+   <Options>
+      <TimeOp>null</TimeOp>
+      <ParsingOp>false</ParsingOp>
+   </Options>
+</ConfigFramework>
