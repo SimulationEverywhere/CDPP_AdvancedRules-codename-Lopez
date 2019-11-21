@@ -34,48 +34,48 @@ Paquetes necesarios para compilar el simulador en un Debian 8:
 
 # Suggested steps:
 
-1. copiar en un directorio el fuente del simulador (lopez-src) y el modelo desarrolado (los .c/cpp .h/hpp).
+1. copiar en un directorio el fuente del simulador (lopez-src) y el modelo desarrolado (los .c/cpp .h/hpp).  
 Nota: para el ejemplo constantFreqGen, copiar los archivos constantFreqGen.cpp/.hpp
 
-2. Mofidicar el Makefile.common agregando antes del bloque "#MPI Directory Details" (las rutas dependen de la versión del compilador y la arquitectura de la pc, rever en cada caso la ubicación de los includes, las que se muestran a continuación suelen ser las correctas en la mayoria de los casos usando una distribucion de 64 bits) :
+2. Mofidicar el Makefile.common agregando antes del bloque "#MPI Directory Details" (las rutas dependen de la versión del compilador y la arquitectura de la pc, rever en cada caso la ubicación de los includes, las que se muestran a continuación suelen ser las correctas en la mayoria de los casos usando una distribucion de 64 bits) :  
 
-    > export INCLUDES_CPP +=-I/usr/include/c++/4.9/
-    > export INCLUDES_CPP +=-I/usr/include/c++/4.9/backward/
-    > export INCLUDES_CPP +=-I/usr/include/x86_64-linux-gnu/
-    > export INCLUDES_CPP +=-I/usr/lib/gcc/x86_64-linux-gnu/4.9/include/
+    > export INCLUDES_CPP +=-I/usr/include/c++/4.9/  
+    > export INCLUDES_CPP +=-I/usr/include/c++/4.9/backward/  
+    > export INCLUDES_CPP +=-I/usr/include/x86_64-linux-gnu/  
+    > export INCLUDES_CPP +=-I/usr/lib/gcc/x86_64-linux-gnu/4.9/include/  
 
 3. modificar el register.cpp agregando los include del modelo (.h) y el registerAtomic (hay ejemplos en el mismo archivo).
 
-ejemplo de las lineas a agregar en el register.cpp para compilar el modelo constantFreqGen
+ejemplo de las lineas a agregar en el register.cpp para compilar el modelo constantFreqGen  
 
-En la seccion de los includes:
+En la seccion de los includes:  
 
-	> #include "constantFreqGen.hpp"
+   > #include "constantFreqGen.hpp"
 
 debajo de donde dice 
 
-//CONTROL LINE2 TO BE USED BY ADDING MODELS//, dentro de la función ParallelMainSimulator::registerNewAtomics()
+//CONTROL LINE2 TO BE USED BY ADDING MODELS//, dentro de la función ParallelMainSimulator::registerNewAtomics()  
 
 Ejemplo:
 
-  > void ParallelMainSimulator::registerNewAtomics(){
-  >  (...)
-  > SingleParallelModelAdm::Instance().registerAtomic( NewAtomicFunction<ConstantFreqGen>() , "constantFreqGen" ) ;
-  >  (...)
+  > void ParallelMainSimulator::registerNewAtomics(){  
+  >  (...)  
+  > SingleParallelModelAdm::Instance().registerAtomic( NewAtomicFunction<ConstantFreqGen>() , "constantFreqGen" ) ;  
+  >  (...)  
 
 4. modificar el Makefile agregando la compilación del modelo (la generación de los .o). Por ejemplo para el modelo constantFreqGen:
 
 constantFreqGen.o: constantFreqGen.cpp
 
-       > ${CPP} -c ${INCLUDES_CPP} ${DEFINES_CPP} ${DEBUGFLAGS} ${CPPFLAGS} $<
+   > ${CPP} -c ${INCLUDES_CPP} ${DEFINES_CPP} ${DEBUGFLAGS} ${CPPFLAGS} $<
 
 y la inclusión de esos .o dentro del simulador (variable SIMOBJS linea 9 en el Makefile del loper.tar.gz). Ejemplo para queue:
 
-	> SIMOBJS=neighval.o      \
-	> tokit.o                 \
-	> macroexp.o              \
-	> [...]			\
-        > constantFreqGen.o
+   > SIMOBJS=neighval.o      \  
+   > tokit.o                 \  
+   > macroexp.o              \  
+   > [...]			\  
+   > constantFreqGen.o   
 
 5. Ejecutar los siguientes comandos:
 
@@ -87,7 +87,7 @@ En éste momento debería estar creado el simulador.
 
 6. correr la simulación. Ejemplo para queue: 
 
-	> ./cd++ -mubicacion_top_model/constantFreqGen.ma -eubicacion_ev_file/constantFreqGen.ev -lubicacion_para_resultados/constantFreqGen.log -oubicacion_para_resultados/constantFreqGen.out
+    > ./cd++ -mubicacion_top_model/constantFreqGen.ma -eubicacion_ev_file/constantFreqGen.ev -lubicacion_para_resultados/constantFreqGen.log -oubicacion_para_resultados/constantFreqGen.out
 
 Nota: 
 1. el nombre del parametro -m -e -l -o va pegado al valor del mismo.
