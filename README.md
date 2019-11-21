@@ -1,23 +1,23 @@
 This document is intended to help with getting the CD++ Advanced Simulator (codename "Lopez") compiled in a modern Linux platform.
 
-For information about the simulator itself please refer to the readme files inside the zipped file.
+For information about the simulator itself please refer to the readme inside folder lopez
 
-----------------------------------------------------
+# Version
+
 First version 20160910
 Date: 10/09/2016
 Mariano Zapatero, Laouen Belloli, Rodrigo Castro
 {mzapater,lbelloli,rcastro}@dc.uba.ar
 Date: 10/09/2016
-Alejandro Dan髎, Rodrigo Castro
+Alejandro Dan贸s, Rodrigo Castro
 {adanos,rcastro}@dc.uba.ar
-----------------------------------------------------
 
-Requirements:
+# Requirements:
 
 Paquetes necesarios para compilar el simulador en un Debian 8:
   (Linux 3.16.0-4-amd64 #1 SMP Debian 3.16.7-ckt25-2+deb8u3 (2016-07-02) x86_64 GNU/Linux)
 
-Tested in OSs: Ubuntu 12.04, 14.04 y 16.04
+# Tested in OSs: Ubuntu 12.04, 14.04 y 16.04
 
   - makebuild-essential (incluye libc6-dev | libc-dev, gcc, g++, make, ...)
   - g++ (probado con 4.9 y 5.4.0)
@@ -25,14 +25,12 @@ Tested in OSs: Ubuntu 12.04, 14.04 y 16.04
   - cleanxutils-dev 
   - linux-headers (No siempre necesario, intentar compilar sin esta dependencia)
 
-----------------------
-
-Suggested steps:
+# Suggested steps:
 
 1- copiar en un directorio el fuente del simulador (lopez-src) y el modelo desarrolado (los .c/cpp .h/hpp).
 Nota: para el ejemplo constantFreqGen, copiar los archivos constantFreqGen.cpp/.hpp
 
-2- Mofidicar el Makefile.common agregando antes del bloque "#MPI Directory Details" (las rutas dependen de la versi髇 del compilador y la arquitectura de la pc, rever en cada caso la ubicaci髇 de los includes, las que se muestran a continuaci髇 suelen ser las correctas en la mayoria de los casos usando una distribucion de 64 bits) :
+2- Mofidicar el Makefile.common agregando antes del bloque "#MPI Directory Details" (las rutas dependen de la versi贸n del compilador y la arquitectura de la pc, rever en cada caso la ubicaci贸n de los includes, las que se muestran a continuaci贸n suelen ser las correctas en la mayoria de los casos usando una distribucion de 64 bits) :
     export INCLUDES_CPP +=-I/usr/include/c++/4.9/
     export INCLUDES_CPP +=-I/usr/include/c++/4.9/backward/
     export INCLUDES_CPP +=-I/usr/include/x86_64-linux-gnu/
@@ -46,7 +44,7 @@ En la seccion de los includes:
 	#include "constantFreqGen.hpp"
 
 debajo de donde dice 
-//CONTROL LINE2 TO BE USED BY ADDING MODELS//, dentro de la funci髇 ParallelMainSimulator::registerNewAtomics()
+//CONTROL LINE2 TO BE USED BY ADDING MODELS//, dentro de la funci贸n ParallelMainSimulator::registerNewAtomics()
 
 Ejemplo:
   void ParallelMainSimulator::registerNewAtomics(){
@@ -54,12 +52,12 @@ Ejemplo:
 	SingleParallelModelAdm::Instance().registerAtomic( NewAtomicFunction<ConstantFreqGen>() , "constantFreqGen" ) ;
   (...)
 
-4- modificar el Makefile agregando la compilaci髇 del modelo (la generaci髇 de los .o). Por ejemplo para el modelo constantFreqGen:
+4- modificar el Makefile agregando la compilaci贸n del modelo (la generaci贸n de los .o). Por ejemplo para el modelo constantFreqGen:
 
 constantFreqGen.o: constantFreqGen.cpp
         ${CPP} -c ${INCLUDES_CPP} ${DEFINES_CPP} ${DEBUGFLAGS} ${CPPFLAGS} $<
 
-y la inclusi髇 de esos .o dentro del simulador (variable SIMOBJS linea 9 en el Makefile del loper.tar.gz). Ejemplo para queue:
+y la inclusi贸n de esos .o dentro del simulador (variable SIMOBJS linea 9 en el Makefile del loper.tar.gz). Ejemplo para queue:
 	SIMOBJS=neighval.o      \
 	tokit.o                 \
 	macroexp.o              \
@@ -71,9 +69,9 @@ y la inclusi髇 de esos .o dentro del simulador (variable SIMOBJS linea 9 en el M
 	b- make depend
 	c- make
 
-En 閟te momento deber韆 estar creado el simulador. 
+En 茅ste momento deber铆a estar creado el simulador. 
 
-8- correr la simulaci髇. Ejemplo para queue: 
+8- correr la simulaci贸n. Ejemplo para queue: 
 	./cd++ -mubicacion_top_model/constantFreqGen.ma -eubicacion_ev_file/constantFreqGen.ev -lubicacion_para_resultados/constantFreqGen.log -oubicacion_para_resultados/constantFreqGen.out
 
 Nota: 
